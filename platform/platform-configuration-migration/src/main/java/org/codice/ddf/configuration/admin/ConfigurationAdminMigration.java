@@ -16,7 +16,6 @@ package org.codice.ddf.configuration.admin;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.lang.Validate.notNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -113,11 +112,8 @@ public class ConfigurationAdminMigration implements ChangeListener, Configuratio
      * be handled by the {@link #notify(Path)} method.
      */
     public void init() throws IOException {
-
         createDirectory(processedDirectory);
-        LOGGER.info("created processed directory");
         createDirectory(failedDirectory);
-        LOGGER.info("created failed directory");
 
         Collection<ConfigurationFile> configFiles = getConfigurationFiles();
 
@@ -198,12 +194,12 @@ public class ConfigurationAdminMigration implements ChangeListener, Configuratio
         }
     }
 
-    // Package-private for unit testing
+    // TODO - Make private and use PowerMock instead
     void moveFile(Path source, Path destination) throws IOException {
         Files.move(source, destination.resolve(source.getFileName()), REPLACE_EXISTING);
     }
 
-    // Package-private for unit testing
+    // TODO - Make private and use PowerMock instead
     DirectoryStream<Path> getFailedDirectoryStream() throws IOException {
         return Files.newDirectoryStream(failedDirectory, FILE_FILTER);
     }
@@ -263,22 +259,25 @@ public class ConfigurationAdminMigration implements ChangeListener, Configuratio
 
     // TODO - Change to use Files/FileUtils instead
     private void createDirectory(Path path) throws IOException {
-        File file = path.toFile();
-
-        if (file.exists()) {
-            if (!file.isDirectory()) {
-                LOGGER.error(
-                        "Failed to create directory [{}]. A file with the same name already exists.",
-                        path.toString());
-                throw new IOException(String.format(
-                        "Failed to create %s. A file with the same name already exists.",
-                        path.toString()));
-            }
-        } else {
-            if (!file.mkdir()) {
-                LOGGER.error("Failed to create directory [{}].", path.toString());
-                throw new IOException(String.format("Failed to create %s.", path.toString()));
-            }
-        }
+        FileUtils.forceMkdir(path.toFile());
+        LOGGER.debug("{} directory created", path.toString());
+        //
+        //        File file = path.toFile();
+        //
+        //        if (file.exists()) {
+        //            if (!file.isDirectory()) {
+        //                LOGGER.error(
+        //                        "Failed to create directory [{}]. A file with the same name already exists.",
+        //                        path.toString());
+        //                throw new IOException(String.format(
+        //                        "Failed to create %s. A file with the same name already exists.",
+        //                        path.toString()));
+        //            }
+        //        } else {
+        //            if (!file.mkdir()) {
+        //                LOGGER.error("Failed to create directory [{}].", path.toString());
+        //                throw new IOException(String.format("Failed to create %s.", path.toString()));
+        //            }
+        //        }
     }
 }
