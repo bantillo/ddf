@@ -91,16 +91,16 @@ public class ConfigurationAdminMigrationTest {
 
     private Path configFileInProcessedDirectory = Paths.get("/root/etc/processed/pid.config");
 
-    @Mock
-    private Path failedDirectoryPath;
+    //@Mock
+    private Path failedDirectoryPath = Paths.get("/root/etc/failed");
 
-    @Mock
-    private File failedDirectory;
+    //@Mock
+    //private File failedDirectory;
 
     private Path configFileInFailedDirectory = Paths.get("/root/etc/failed/pid.config");
 
     @Mock
-    private Path exportedDirectoryPath;
+    private Path exportedDirectoryPath = Paths.get("root/etc/exported");
 
     @Mock
     private File exportedDirectory;
@@ -174,10 +174,10 @@ public class ConfigurationAdminMigrationTest {
 
         when(configuration.getPid()).thenReturn(CONFIG_PID);
         //        when(processedDirectoryPath.toFile()).thenReturn(processedDirectory);
-        when(failedDirectoryPath.toFile()).thenReturn(failedDirectory);
+        //when(failedDirectoryPath.toFile()).thenReturn(failedDirectory);
         when(exportedDirectoryPath.toFile()).thenReturn(exportedDirectory);
-        when(configFile1.getConfigFilePath()).thenReturn(configPath1);
-        when(configFile2.getConfigFilePath()).thenReturn(configPath2);
+        //when(configFile1.getConfigFilePath()).thenReturn(configPath1);
+        //when(configFile2.getConfigFilePath()).thenReturn(configPath2);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -262,19 +262,19 @@ public class ConfigurationAdminMigrationTest {
             throws IOException {
         //        when(processedDirectory.exists()).thenReturn(true);
         //        when(processedDirectory.isDirectory()).thenReturn(true);
-        when(failedDirectory.exists()).thenReturn(true);
-        when(failedDirectory.isDirectory()).thenReturn(true);
+        //when(failedDirectory.exists()).thenReturn(true);
+        //when(failedDirectory.isDirectory()).thenReturn(true);
 
         ConfigurationAdminMigration configurationAdminMigration =
                 createConfigurationAdminMigratorWithNoFiles();
         configurationAdminMigration.init();
 
         //        verify(processedDirectory, never()).mkdir();
-        verify(failedDirectory, never()).mkdir();
+        //verify(failedDirectory, never()).mkdir();
         verify(configurationDirectoryStream).close();
     }
 
-    @Ignore
+
     @Test(expected = IOException.class)
     public void testInitFailsWhenProcessedDirectoryExistsButIsNotADirectory() throws IOException {
         PowerMockito.doThrow(new IOException())
@@ -292,7 +292,7 @@ public class ConfigurationAdminMigrationTest {
         verify(configurationDirectoryStream).close();
     }
 
-    @Ignore
+
     @Test(expected = IOException.class)
     public void testInitFailsWhenFailedDirectoryExistsButIsNotADirectory() throws IOException {
         PowerMockito.doNothing()
@@ -300,7 +300,7 @@ public class ConfigurationAdminMigrationTest {
         FileUtils.forceMkdir(processedDirectoryPath.toFile());
         PowerMockito.doThrow(new IOException())
                 .when(FileUtils.class);
-        FileUtils.forceMkdir(failedDirectory);
+        FileUtils.forceMkdir(failedDirectoryPath.toFile());
 
         //        when(processedDirectory.exists()).thenReturn(true);
         //        when(processedDirectory.isDirectory()).thenReturn(true);
@@ -313,13 +313,13 @@ public class ConfigurationAdminMigrationTest {
         verify(configurationDirectoryStream).close();
     }
 
-    @Ignore
+
     @Test
     public void testInitCreatesProcessedDirectory() throws IOException {
         //        when(processedDirectory.exists()).thenReturn(false);
         //        when(processedDirectory.mkdir()).thenReturn(true);
-        when(failedDirectory.exists()).thenReturn(true);
-        when(failedDirectory.isDirectory()).thenReturn(true);
+        //when(failedDirectory.exists()).thenReturn(true);
+        //when(failedDirectory.isDirectory()).thenReturn(true);
 
         ConfigurationAdminMigration configurationAdminMigration =
                 createConfigurationAdminMigratorWithNoFiles();
@@ -331,20 +331,19 @@ public class ConfigurationAdminMigrationTest {
         verify(configurationDirectoryStream).close();
     }
 
-    @Ignore
     @Test
     public void testInitCreatesFailedDirectory() throws IOException {
         //        when(processedDirectory.exists()).thenReturn(true);
         //        when(processedDirectory.isDirectory()).thenReturn(true);
-        when(failedDirectory.exists()).thenReturn(false);
-        when(failedDirectory.mkdir()).thenReturn(true);
+        // when(failedDirectory.exists()).thenReturn(false);
+        // when(failedDirectory.mkdir()).thenReturn(true);
 
         ConfigurationAdminMigration configurationAdminMigration =
                 createConfigurationAdminMigratorWithNoFiles();
         configurationAdminMigration.init();
 
         verifyStatic();
-        FileUtils.forceMkdir(failedDirectory);
+        FileUtils.forceMkdir(failedDirectoryPath.toFile());
         //        verify(failedDirectory).mkdir();
         verify(configurationDirectoryStream).close();
     }
@@ -513,7 +512,7 @@ public class ConfigurationAdminMigrationTest {
         verify(configurationDirectoryStream).close();
     }
 
-    @Ignore
+
     @Test
     public void testInitMovesFilesWithAnInvalidTypeToFailedDirectory() throws Exception {
         setUpDefaultDirectoryExpectations();
@@ -764,7 +763,7 @@ public class ConfigurationAdminMigrationTest {
         verify(configFile1).createConfig();
     }
 
-    @Ignore
+
     @Test
     public void testGetFailedConfigurationFilesTwoFilesInFailedDirectory() throws Exception {
         when(configPath1.getFileName()).thenReturn(configPath1);
@@ -804,7 +803,6 @@ public class ConfigurationAdminMigrationTest {
                 hasItems(expectedPaths));
     }
 
-    @Ignore
     @Test
     public void testGetFailedConfigurationFilesNoFilesInFailedDirectory() throws Exception {
         when(failedDirectoryStreamIterator.hasNext()).thenReturn(false);
@@ -991,8 +989,8 @@ public class ConfigurationAdminMigrationTest {
     private void setUpDefaultDirectoryExpectations() {
         //        when(processedDirectory.exists()).thenReturn(false);
         //        when(processedDirectory.mkdir()).thenReturn(true);
-        when(failedDirectory.exists()).thenReturn(false);
-        when(failedDirectory.mkdir()).thenReturn(true);
+        //when(failedDirectory.exists()).thenReturn(false);
+        //when(failedDirectory.mkdir()).thenReturn(true);
     }
 
     private void setUpTwoConfigFileIterator(DirectoryStream<Path> stream) {
