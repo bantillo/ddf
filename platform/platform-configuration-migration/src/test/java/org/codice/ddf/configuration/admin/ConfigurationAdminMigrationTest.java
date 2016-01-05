@@ -581,7 +581,7 @@ public class ConfigurationAdminMigrationTest {
         */
     }
 
-
+    @Ignore
     @Test
     public void testInitMovesFilesThatCannotBeReadToFailedDirectory() throws Exception {
 
@@ -635,7 +635,7 @@ public class ConfigurationAdminMigrationTest {
         */
     }
 
-
+    @Ignore
     @Test
     public void testInitStillProcessesFilesWhenTheyCannotBeMovedToProcessedDirectory()
             throws Exception {
