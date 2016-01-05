@@ -194,13 +194,11 @@ public class ConfigurationAdminMigration implements ChangeListener, Configuratio
         }
     }
 
-    // TODO - Make private and use PowerMock instead
-    void moveFile(Path source, Path destination) throws IOException {
+    private void moveFile(Path source, Path destination) throws IOException {
         Files.move(source, destination.resolve(source.getFileName()), REPLACE_EXISTING);
     }
 
-    // TODO - Make private and use PowerMock instead
-    DirectoryStream<Path> getFailedDirectoryStream() throws IOException {
+    private DirectoryStream<Path> getFailedDirectoryStream() throws IOException {
         return Files.newDirectoryStream(failedDirectory, FILE_FILTER);
     }
 
