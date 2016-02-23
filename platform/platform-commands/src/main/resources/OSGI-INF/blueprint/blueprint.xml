@@ -51,9 +51,20 @@
     <reference id="configurationMigrationService"
                interface="org.codice.ddf.configuration.store.ConfigurationMigrationService"/>
 
-    <bean id="defaultExportDirectoryPath" class="java.nio.file.Paths"
-          factory-method="get">
-        <argument value="file://${defaultExportDirectory}"/>
+    <!-- Base URI for DDF home -->
+    <bean id="ddfHomeFile" class="java.io.File">
+        <argument value="${ddf.home}"/>
+    </bean>
+
+    <bean id="ddfHomeUri" class="java.net.URI" factory-ref="ddfHomeFile" factory-method="toURI"/>
+
+    <bean id="ddfHome" class="java.nio.file.Paths" factory-method="get">
+        <argument ref="ddfHomeUri"/>
+    </bean>
+
+    <bean id="defaultExportDirectoryPath" class="java.nio.file.Path" factory-ref="ddfHome"
+          factory-method="resolve">
+        <argument value="etc/exported"/>
     </bean>
 
     <bean id="platformExportCommand" class="org.codice.ddf.commands.platform.ExportCommand">
